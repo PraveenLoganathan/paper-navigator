@@ -7,6 +7,15 @@ import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Search, ChevronDown, ChevronUp, Download, Lock, CheckCircle2, Plus, AlertTriangle, Sparkles } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
 
 interface FindPapersProps {
   searchResults: Paper[];
@@ -28,6 +37,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
   const [showRewritePrompt, setShowRewritePrompt] = useState(false);
   const [useOptimized, setUseOptimized] = useState(false);
   const [downloadableOnly, setDownloadableOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // DOI upload state
   const [doiText, setDoiText] = useState('');
@@ -39,6 +49,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
     if (!query.trim()) return;
     setHasSearched(true);
     setShowRewritePrompt(false);
+    setCurrentPage(1);
   };
 
   const handleQueryChange = (val: string) => {
@@ -50,6 +61,10 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
   const results = hasSearched
     ? searchResults.filter(p => !downloadableOnly || p.availability === 'available')
     : [];
+
+  const ITEMS_PER_PAGE = resultCount;
+  const totalPages = Math.max(1, Math.ceil(results.length / ITEMS_PER_PAGE));
+  const paginatedResults = results.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const downloadableCount = searchResults.filter(p => p.availability === 'available').length;
 
@@ -153,7 +168,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                 <input
                   type="checkbox"
                   checked={downloadableOnly}
-                  onChange={e => setDownloadableOnly(e.target.checked)}
+                  onChange={e => { setDownloadableOnly(e.target.checked); setCurrentPage(1); }}
                   className="rounded border-input"
                 />
                 Show downloadable only
@@ -162,7 +177,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
 
             {/* Result cards */}
             <div className="space-y-2">
-              {results.map(paper => {
+              {paginatedResults.map(paper => {
                 const inLibrary = libraryPmids.has(paper.pmid);
                 return (
                   <Card key={paper.id} className="p-4 animate-slide-in">
@@ -196,6 +211,44 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                 );
               })}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination className="mt-4">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                    if (totalPages <= 7 || page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            isActive={page === currentPage}
+                            onClick={() => setCurrentPage(page)}
+                            className="cursor-pointer"
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    }
+                    if (page === 2 && currentPage > 3) return <PaginationItem key="start-ellipsis"><PaginationEllipsis /></PaginationItem>;
+                    if (page === totalPages - 1 && currentPage < totalPages - 2) return <PaginationItem key="end-ellipsis"><PaginationEllipsis /></PaginationItem>;
+                    return null;
+                  })}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </>
         )}
       </TabsContent>
