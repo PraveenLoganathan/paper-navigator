@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Paper } from '@/types/paper';
+import { SearchPaper } from '@/types/paper';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Search, ChevronDown, ChevronUp, Download, Lock, CheckCircle2, Plus, AlertTriangle, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, Download, Lock, CheckCircle2, Plus, Sparkles } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,
@@ -18,9 +18,9 @@ import {
 } from '@/components/ui/pagination';
 
 interface FindPapersProps {
-  searchResults: Paper[];
+  searchResults: SearchPaper[];
   libraryPmids: Set<string>;
-  onAddPaper: (paper: Paper) => void;
+  onAddPaper: (paper: SearchPaper) => void;
 }
 
 const SUGGESTIONS = [
@@ -38,11 +38,11 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
   const [useOptimized, setUseOptimized] = useState(false);
   const [downloadableOnly, setDownloadableOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState<'relevance' | 'newest' | 'oldest' | 'availability'>('relevance');
+  const [sortBy, setSortBy] = useState<'best_match' | 'pub_date_desc' | 'pub_date_asc' | 'availability'>('best_match');
 
   // DOI upload state
   const [doiText, setDoiText] = useState('');
-  const [doiResults, setDoiResults] = useState<{ doi: string; status: string }[] | null>(null);
+  const [doiResults, setDoiResults] = useState<{ identifier: string; status: string; error: string | null }[] | null>(null);
 
   const optimizedQuery = query ? `("${query.split(' ').slice(0, 3).join('" AND "')}"[MeSH Terms]) AND ("therapy"[Subheading] OR "treatment outcome"[MeSH Terms])` : '';
 
@@ -64,13 +64,13 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
     : [];
 
   const results = [...filtered].sort((a, b) => {
-    if (sortBy === 'newest') return b.year - a.year;
-    if (sortBy === 'oldest') return a.year - b.year;
+    if (sortBy === 'pub_date_desc') return Number(b.year) - Number(a.year);
+    if (sortBy === 'pub_date_asc') return Number(a.year) - Number(b.year);
     if (sortBy === 'availability') {
       const order = { available: 0, preprint: 1, requires_access: 2 };
       return (order[a.availability ?? 'requires_access'] ?? 2) - (order[b.availability ?? 'requires_access'] ?? 2);
     }
-    return 0;
+    return 0; // best_match preserves original order
   });
 
   const ITEMS_PER_PAGE = resultCount;
@@ -81,13 +81,15 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
 
   const handleDoiSubmit = () => {
     const dois = doiText.split('\n').map(d => d.trim()).filter(Boolean);
+    // Mock /api/papers/ingest/dois response shape
     setDoiResults(dois.map((doi, i) => ({
-      doi,
-      status: i % 4 === 0 ? 'queued' : i % 4 === 1 ? 'queued' : i % 4 === 2 ? 'no_pdf' : 'failed',
+      identifier: doi,
+      status: i % 4 === 0 ? 'queued' : i % 4 === 1 ? 'queued' : i % 4 === 2 ? 'not_found' : 'failed',
+      error: i % 4 === 3 ? 'PDF download failed' : null,
     })));
   };
 
-  const availBadge = (p: Paper) => {
+  const availBadge = (p: SearchPaper) => {
     if (p.availability === 'available') return <Badge variant="success" className="gap-1 text-[10px]"><Download className="h-3 w-3" />Available to ingest</Badge>;
     if (p.availability === 'preprint') return <Badge variant="warning" className="gap-1 text-[10px]">Preprint</Badge>;
     return <Badge variant="secondary" className="gap-1 text-[10px]"><Lock className="h-3 w-3" />Requires access</Badge>;
@@ -181,9 +183,9 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                   value={sortBy}
                   onChange={e => { setSortBy(e.target.value as typeof sortBy); setCurrentPage(1); }}
                 >
-                  <option value="relevance">Sort: Relevance</option>
-                  <option value="newest">Sort: Newest first</option>
-                  <option value="oldest">Sort: Oldest first</option>
+                  <option value="best_match">Sort: Best match</option>
+                  <option value="pub_date_desc">Sort: Newest first</option>
+                  <option value="pub_date_asc">Sort: Oldest first</option>
                   <option value="availability">Sort: Availability</option>
                 </select>
                 <label className="flex items-center gap-2 text-xs cursor-pointer">
@@ -201,15 +203,16 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
               {paginatedResults.map(paper => {
                 const inLibrary = libraryPmids.has(paper.pmid);
                 return (
-                  <Card key={paper.id} className="p-4 animate-slide-in">
+                  <Card key={paper.pmid} className="p-4 animate-slide-in">
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
                         {availBadge(paper)}
                         {inLibrary && <Badge variant="default" className="text-[10px]">In library</Badge>}
+                        {paper.open_access && <Badge variant="outline" className="text-[10px]">Open Access</Badge>}
                       </div>
                       <h3 className="font-semibold text-sm leading-tight">{paper.title}</h3>
                       <p className="text-xs text-muted-foreground">
-                        {paper.authors} · <span className="italic">{paper.journal}</span> · {paper.year}
+                        {paper.authors.join(', ')} · <span className="italic">{paper.journal}</span> · {paper.year}
                         <span className="font-mono ml-1">PMID: {paper.pmid}</span>
                       </p>
                       <p className="text-xs text-muted-foreground leading-relaxed">
@@ -217,6 +220,9 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                       </p>
                       {paper.licence && (
                         <p className="text-[10px] text-muted-foreground">Licence: {paper.licence}</p>
+                      )}
+                      {paper.availability_note && (
+                        <p className="text-[10px] text-muted-foreground italic">{paper.availability_note}</p>
                       )}
                       <div className="flex justify-end">
                         {paper.availability === 'requires_access' ? null : inLibrary ? (
@@ -289,7 +295,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
               {[
                 { label: 'Submitted', value: doiResults.length },
                 { label: 'Queued', value: doiResults.filter(d => d.status === 'queued').length },
-                { label: 'No PDF', value: doiResults.filter(d => d.status === 'no_pdf').length },
+                { label: 'Not found', value: doiResults.filter(d => d.status === 'not_found').length },
                 { label: 'Failed', value: doiResults.filter(d => d.status === 'failed').length },
               ].map(s => (
                 <Card key={s.label} className="p-2 text-center">
@@ -301,9 +307,9 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
             <div className="space-y-1">
               {doiResults.map((d, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs py-1.5 border-b border-border last:border-0">
-                  <span className="font-mono flex-1 truncate">{d.doi}</span>
-                  <Badge variant={d.status === 'queued' ? 'info' as any : d.status === 'no_pdf' ? 'warning' : 'destructive'}>
-                    {d.status === 'queued' ? 'Queued' : d.status === 'no_pdf' ? 'No PDF' : 'Failed'}
+                  <span className="font-mono flex-1 truncate">{d.identifier}</span>
+                  <Badge variant={d.status === 'queued' ? 'info' as any : d.status === 'not_found' ? 'warning' : 'destructive'}>
+                    {d.status === 'queued' ? 'Queued' : d.status === 'not_found' ? 'Not found' : 'Failed'}
                   </Badge>
                 </div>
               ))}

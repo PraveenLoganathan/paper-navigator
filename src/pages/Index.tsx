@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { usePaperStore } from '@/hooks/usePaperStore';
 import MyLibrary from '@/components/MyLibrary';
 import FindPapers from '@/components/FindPapers';
@@ -8,8 +7,8 @@ import AskTab from '@/components/AskTab';
 import { BookOpen, Search, MessageCircle, Wifi, WifiOff, Loader2 } from 'lucide-react';
 
 const Index = () => {
-  const { papers, stats, backendHealth, chatMessages, addPaper, sendMessage, searchPapers } = usePaperStore();
-  const libraryPmids = useMemo(() => new Set(papers.map(p => p.pmid)), [papers]);
+  const { documents, stats, backendHealth, chatMessages, addPaperFromSearch, sendMessage, searchPapers } = usePaperStore();
+  const libraryPmids = useMemo(() => new Set(documents.map(d => d.pmid).filter((p): p is string => !!p)), [documents]);
 
   const healthPill = () => {
     if (backendHealth === 'ready') return (
@@ -31,7 +30,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
@@ -42,7 +40,6 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main tabs */}
       <div className="container max-w-5xl mx-auto px-4 py-4">
         <Tabs defaultValue="library">
           <TabsList className="w-full justify-start bg-muted/50">
@@ -66,11 +63,11 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="library">
-            <MyLibrary papers={papers} stats={stats} />
+            <MyLibrary documents={documents} stats={stats} />
           </TabsContent>
 
           <TabsContent value="find">
-            <FindPapers searchResults={searchPapers} libraryPmids={libraryPmids} onAddPaper={addPaper} />
+            <FindPapers searchResults={searchPapers} libraryPmids={libraryPmids} onAddPaper={addPaperFromSearch} />
           </TabsContent>
 
           <TabsContent value="ask">

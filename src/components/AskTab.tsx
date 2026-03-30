@@ -80,10 +80,10 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
             key={msg.id}
             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-in`}
           >
-            <div className={`max-w-[80%] space-y-1.5 ${msg.role === 'user' ? '' : ''}`}>
+            <div className={`max-w-[80%] space-y-1.5`}>
               <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                 {msg.role === 'user' ? 'You' : 'Assistant'}
-                {msg.sourceCount && <span className="ml-1 normal-case">· {msg.sourceCount} sources</span>}
+                {msg.sources && msg.sources.length > 0 && <span className="ml-1 normal-case">· {msg.sources.length} sources</span>}
               </div>
               <Card className={`p-3 ${
                 msg.isError
@@ -95,14 +95,14 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
                 {msg.isError && <AlertTriangle className="h-4 w-4 text-destructive mb-1" />}
                 <div className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</div>
               </Card>
-              {msg.rewrittenQuery && (
-                <p className="text-[10px] text-muted-foreground italic">Rewritten: {msg.rewrittenQuery}</p>
+              {msg.rewritten_query && (
+                <p className="text-[10px] text-muted-foreground italic">Rewritten: {msg.rewritten_query}</p>
               )}
-              {msg.citations && msg.citations.length > 0 && (
+              {msg.sources && msg.sources.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {msg.citations.map((c, i) => (
-                    <span key={i} className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
-                      {c}
+                  {msg.sources.map((src, i) => (
+                    <span key={i} className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium" title={src.excerpt || src.caption || ''}>
+                      {src.citation} {src.document_title.length > 30 ? src.document_title.slice(0, 30) + '…' : src.document_title}
                     </span>
                   ))}
                 </div>
