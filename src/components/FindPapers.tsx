@@ -168,7 +168,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                 <input
                   type="checkbox"
                   checked={downloadableOnly}
-                  onChange={e => setDownloadableOnly(e.target.checked)}
+                  onChange={e => { setDownloadableOnly(e.target.checked); setCurrentPage(1); }}
                   className="rounded border-input"
                 />
                 Show downloadable only
