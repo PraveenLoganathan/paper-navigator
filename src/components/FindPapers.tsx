@@ -171,22 +171,32 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
         {/* Results toolbar */}
         {hasSearched && (
           <>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-sm flex-wrap gap-2">
               <span className="text-muted-foreground">
                 <strong>{results.length}</strong> results · <strong>{downloadableCount}</strong> downloadable
               </span>
-              <label className="flex items-center gap-2 text-xs cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={downloadableOnly}
-                  onChange={e => { setDownloadableOnly(e.target.checked); setCurrentPage(1); }}
-                  className="rounded border-input"
-                />
-                Show downloadable only
-              </label>
+              <div className="flex items-center gap-3">
+                <select
+                  className="rounded-md border border-input bg-background px-2 py-1 text-xs"
+                  value={sortBy}
+                  onChange={e => { setSortBy(e.target.value as typeof sortBy); setCurrentPage(1); }}
+                >
+                  <option value="relevance">Sort: Relevance</option>
+                  <option value="newest">Sort: Newest first</option>
+                  <option value="oldest">Sort: Oldest first</option>
+                  <option value="availability">Sort: Availability</option>
+                </select>
+                <label className="flex items-center gap-2 text-xs cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={downloadableOnly}
+                    onChange={e => { setDownloadableOnly(e.target.checked); setCurrentPage(1); }}
+                    className="rounded border-input"
+                  />
+                  Show downloadable only
+                </label>
+              </div>
             </div>
-
-            {/* Result cards */}
             <div className="space-y-2">
               {paginatedResults.map(paper => {
                 const inLibrary = libraryPmids.has(paper.pmid);
