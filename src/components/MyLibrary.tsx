@@ -148,7 +148,7 @@ export default function MyLibrary({ documents, stats }: MyLibraryProps) {
           const sb = statusBadge(doc.status);
           const sideLabel = doc.status === 'ingested' ? 'Ready' : doc.status === 'processing' || doc.status === 'queued' ? 'In progress' : 'Needs review';
           const sideColor = doc.status === 'ingested' ? 'text-success' : doc.status === 'processing' || doc.status === 'queued' ? 'text-processing' : 'text-destructive';
-          const ingestedDate = doc.ingested_at ? new Date(doc.ingested_at).toLocaleDateString() : '';
+          const pubDate = doc.published_date ? new Date(doc.published_date).toLocaleDateString() : (doc.pub_year || '');
           return (
             <Card key={doc.doc_id} className="p-4 hover:shadow-md transition-shadow animate-slide-in">
               <div className="flex gap-4">
