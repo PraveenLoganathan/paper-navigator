@@ -37,6 +37,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
   const [showRewritePrompt, setShowRewritePrompt] = useState(false);
   const [useOptimized, setUseOptimized] = useState(false);
   const [downloadableOnly, setDownloadableOnly] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // DOI upload state
   const [doiText, setDoiText] = useState('');
