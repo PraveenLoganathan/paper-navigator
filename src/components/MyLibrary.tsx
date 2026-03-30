@@ -190,7 +190,7 @@ export default function MyLibrary({ documents, stats }: MyLibraryProps) {
                 {/* Side column */}
                 <div className="flex-shrink-0 text-right space-y-1 w-28">
                   <div className={`text-xs font-semibold ${sideColor}`}>{sideLabel}</div>
-                  <div className="text-xs text-muted-foreground">{ingestedDate}</div>
+                  <div className="text-xs text-muted-foreground">{pubDate}</div>
                 </div>
               </div>
             </Card>

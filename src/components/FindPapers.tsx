@@ -212,7 +212,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                       </div>
                       <h3 className="font-semibold text-sm leading-tight">{paper.title}</h3>
                       <p className="text-xs text-muted-foreground">
-                        {paper.authors.join(', ')} · <span className="italic">{paper.journal}</span> · {paper.year}
+                        {paper.authors.join(', ')} · <span className="italic">{paper.journal}</span> · {paper.published_date ? new Date(paper.published_date).toLocaleDateString() : paper.year}
                         <span className="font-mono ml-1">PMID: {paper.pmid}</span>
                       </p>
                       <p className="text-xs text-muted-foreground leading-relaxed">
