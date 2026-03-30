@@ -38,6 +38,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
   const [useOptimized, setUseOptimized] = useState(false);
   const [downloadableOnly, setDownloadableOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<'relevance' | 'newest' | 'oldest' | 'availability'>('relevance');
 
   // DOI upload state
   const [doiText, setDoiText] = useState('');
@@ -58,9 +59,19 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
     else setShowRewritePrompt(false);
   };
 
-  const results = hasSearched
+  const filtered = hasSearched
     ? searchResults.filter(p => !downloadableOnly || p.availability === 'available')
     : [];
+
+  const results = [...filtered].sort((a, b) => {
+    if (sortBy === 'newest') return b.year - a.year;
+    if (sortBy === 'oldest') return a.year - b.year;
+    if (sortBy === 'availability') {
+      const order = { available: 0, preprint: 1, requires_access: 2 };
+      return (order[a.availability ?? 'requires_access'] ?? 2) - (order[b.availability ?? 'requires_access'] ?? 2);
+    }
+    return 0;
+  });
 
   const ITEMS_PER_PAGE = resultCount;
   const totalPages = Math.max(1, Math.ceil(results.length / ITEMS_PER_PAGE));
@@ -160,22 +171,32 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
         {/* Results toolbar */}
         {hasSearched && (
           <>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-sm flex-wrap gap-2">
               <span className="text-muted-foreground">
                 <strong>{results.length}</strong> results · <strong>{downloadableCount}</strong> downloadable
               </span>
-              <label className="flex items-center gap-2 text-xs cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={downloadableOnly}
-                  onChange={e => { setDownloadableOnly(e.target.checked); setCurrentPage(1); }}
-                  className="rounded border-input"
-                />
-                Show downloadable only
-              </label>
+              <div className="flex items-center gap-3">
+                <select
+                  className="rounded-md border border-input bg-background px-2 py-1 text-xs"
+                  value={sortBy}
+                  onChange={e => { setSortBy(e.target.value as typeof sortBy); setCurrentPage(1); }}
+                >
+                  <option value="relevance">Sort: Relevance</option>
+                  <option value="newest">Sort: Newest first</option>
+                  <option value="oldest">Sort: Oldest first</option>
+                  <option value="availability">Sort: Availability</option>
+                </select>
+                <label className="flex items-center gap-2 text-xs cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={downloadableOnly}
+                    onChange={e => { setDownloadableOnly(e.target.checked); setCurrentPage(1); }}
+                    className="rounded border-input"
+                  />
+                  Show downloadable only
+                </label>
+              </div>
             </div>
-
-            {/* Result cards */}
             <div className="space-y-2">
               {paginatedResults.map(paper => {
                 const inLibrary = libraryPmids.has(paper.pmid);
