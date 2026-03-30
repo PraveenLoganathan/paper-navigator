@@ -177,7 +177,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
 
             {/* Result cards */}
             <div className="space-y-2">
-              {results.map(paper => {
+              {paginatedResults.map(paper => {
                 const inLibrary = libraryPmids.has(paper.pmid);
                 return (
                   <Card key={paper.id} className="p-4 animate-slide-in">
@@ -211,6 +211,44 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
                 );
               })}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination className="mt-4">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                    if (totalPages <= 7 || page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            isActive={page === currentPage}
+                            onClick={() => setCurrentPage(page)}
+                            className="cursor-pointer"
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    }
+                    if (page === 2 && currentPage > 3) return <PaginationItem key="start-ellipsis"><PaginationEllipsis /></PaginationItem>;
+                    if (page === totalPages - 1 && currentPage < totalPages - 2) return <PaginationItem key="end-ellipsis"><PaginationEllipsis /></PaginationItem>;
+                    return null;
+                  })}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </>
         )}
       </TabsContent>
