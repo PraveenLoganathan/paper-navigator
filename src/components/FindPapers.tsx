@@ -49,6 +49,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
     if (!query.trim()) return;
     setHasSearched(true);
     setShowRewritePrompt(false);
+    setCurrentPage(1);
   };
 
   const handleQueryChange = (val: string) => {
