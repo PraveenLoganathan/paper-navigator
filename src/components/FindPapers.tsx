@@ -38,6 +38,7 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
   const [useOptimized, setUseOptimized] = useState(false);
   const [downloadableOnly, setDownloadableOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<'relevance' | 'newest' | 'oldest' | 'availability'>('relevance');
 
   // DOI upload state
   const [doiText, setDoiText] = useState('');
