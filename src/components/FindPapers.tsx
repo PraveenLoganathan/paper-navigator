@@ -62,6 +62,10 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
     ? searchResults.filter(p => !downloadableOnly || p.availability === 'available')
     : [];
 
+  const ITEMS_PER_PAGE = resultCount;
+  const totalPages = Math.max(1, Math.ceil(results.length / ITEMS_PER_PAGE));
+  const paginatedResults = results.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   const downloadableCount = searchResults.filter(p => p.availability === 'available').length;
 
   const handleDoiSubmit = () => {
