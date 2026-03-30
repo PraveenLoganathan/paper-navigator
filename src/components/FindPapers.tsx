@@ -59,9 +59,19 @@ export default function FindPapers({ searchResults, libraryPmids, onAddPaper }: 
     else setShowRewritePrompt(false);
   };
 
-  const results = hasSearched
+  const filtered = hasSearched
     ? searchResults.filter(p => !downloadableOnly || p.availability === 'available')
     : [];
+
+  const results = [...filtered].sort((a, b) => {
+    if (sortBy === 'newest') return b.year - a.year;
+    if (sortBy === 'oldest') return a.year - b.year;
+    if (sortBy === 'availability') {
+      const order = { available: 0, preprint: 1, requires_access: 2 };
+      return (order[a.availability ?? 'requires_access'] ?? 2) - (order[b.availability ?? 'requires_access'] ?? 2);
+    }
+    return 0;
+  });
 
   const ITEMS_PER_PAGE = resultCount;
   const totalPages = Math.max(1, Math.ceil(results.length / ITEMS_PER_PAGE));
