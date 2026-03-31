@@ -94,7 +94,13 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
                     : 'bg-card'
               }`}>
                 {msg.isError && <AlertTriangle className="h-4 w-4 text-destructive mb-1" />}
-                <div className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+                {msg.role === 'assistant' ? (
+                  <div className="text-sm leading-relaxed prose prose-sm prose-stone dark:prose-invert max-w-none prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-headings:my-2 prose-strong:text-foreground">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+                )}
               </Card>
               {msg.rewritten_query && (
                 <p className="text-[10px] text-muted-foreground italic">Rewritten: {msg.rewritten_query}</p>
