@@ -61,7 +61,7 @@ const MOCK_DOCUMENTS: LibraryDocument[] = [
 const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   {
     pmid: '39012345', doi: '10.1016/S0140-6736(24)00234-5', title: 'Baricitinib versus adalimumab in methotrexate-naive RA: 5-year follow-up of RA-BEGIN',
-    authors: ['Fleischmann R', 'Schiff M', 'van der Heijde D'], journal: 'Lancet', year: '2024',
+    authors: ['Fleischmann R', 'Schiff M', 'van der Heijde D'], journal: 'Lancet', year: '2024', published_date: '2024-03-15',
     abstract: 'Long-term outcomes of initial treatment strategies comparing baricitinib monotherapy, baricitinib plus methotrexate, and adalimumab plus methotrexate in patients with early active rheumatoid arthritis.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
