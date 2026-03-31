@@ -3,6 +3,7 @@ import { ChatMessage } from '@/types/paper';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Send, Trash2, AlertTriangle } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface AskTabProps {
   messages: ChatMessage[];
