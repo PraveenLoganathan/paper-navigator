@@ -73,7 +73,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39034567', doi: '10.7326/M24-0567', title: 'Anti-GM-CSF therapy for giant cell arteritis: a randomised controlled trial',
-    authors: ['Wicks IP', 'Langdon J', 'Roberts A'], journal: 'Ann Intern Med', year: '2024',
+    authors: ['Wicks IP', 'Langdon J', 'Roberts A'], journal: 'Ann Intern Med', year: '2024', published_date: '2024-05-10',
     abstract: 'GM-CSF drives macrophage activation in giant cell arteritis. This phase 2b trial randomised 164 patients with newly diagnosed GCA to otilimab or placebo.',
     open_access: true, availability: 'preprint', licence: 'CC BY-NC 4.0', source: 'biorxiv',
   },
