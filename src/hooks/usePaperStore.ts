@@ -115,7 +115,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39101234', doi: '10.1038/s41591-024-02890-1', title: 'Microbiome-directed therapy restores gut barrier in spondyloarthritis',
-    authors: ['Costello ME', 'Ciccia F', 'Brown MA'], journal: 'Nat Med', year: '2024',
+    authors: ['Costello ME', 'Ciccia F', 'Brown MA'], journal: 'Nat Med', year: '2024', published_date: '2024-09-03',
     abstract: 'A precision microbiome intervention targeting Prevotella copri abundance restored intestinal permeability and reduced inflammatory markers in 68 spondyloarthritis patients.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
