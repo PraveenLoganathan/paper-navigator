@@ -121,7 +121,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39112345', doi: '10.1056/NEJMoa2401234', title: 'Dual JAK1/TYK2 inhibition in dermatomyositis: phase 2 results',
-    authors: ['Aggarwal R', 'Oddis CV', 'Engel AG'], journal: 'N Engl J Med', year: '2024',
+    authors: ['Aggarwal R', 'Oddis CV', 'Engel AG'], journal: 'N Engl J Med', year: '2024', published_date: '2024-10-18',
     abstract: 'Brepocitinib, a dual JAK1/TYK2 inhibitor, showed significant improvement in CDASI activity score versus placebo at 24 weeks in moderate-to-severe dermatomyositis.',
     open_access: false, availability: 'requires_access',
   },
