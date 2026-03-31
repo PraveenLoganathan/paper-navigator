@@ -67,7 +67,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39023456', doi: '10.1056/NEJMoa2400123', title: 'Upadacitinib in axial spondyloarthritis: SELECT-AXIS 2 trial results',
-    authors: ['van der Heijde D', 'Deodhar A', 'Baraliakos X'], journal: 'N Engl J Med', year: '2024',
+    authors: ['van der Heijde D', 'Deodhar A', 'Baraliakos X'], journal: 'N Engl J Med', year: '2024', published_date: '2024-01-22',
     abstract: 'Upadacitinib, an oral selective JAK1 inhibitor, was evaluated in patients with active non-radiographic axial spondyloarthritis in this phase 3 randomized trial.',
     open_access: false, availability: 'available', licence: 'Subscription', source: 'unpaywall',
   },
