@@ -85,7 +85,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39056789', doi: '10.1002/art.42901', title: 'Tofacitinib dose reduction strategies in stable RA: ORAL Shift randomised trial',
-    authors: ['Wollenhaupt J', 'Lee EB', 'Curtis JR'], journal: 'Arthritis Rheumatol', year: '2024',
+    authors: ['Wollenhaupt J', 'Lee EB', 'Curtis JR'], journal: 'Arthritis Rheumatol', year: '2024', published_date: '2024-06-01',
     abstract: 'This trial evaluated tapering tofacitinib from 5 mg BID to 5 mg QD in RA patients achieving sustained low disease activity, showing non-inferiority for the primary endpoint.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
