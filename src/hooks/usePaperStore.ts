@@ -109,7 +109,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39090123', doi: '10.1001/jama.2024.5678', title: 'Secukinumab versus TNF inhibitors in PsA with axial involvement: head-to-head trial',
-    authors: ['McInnes IB', 'Mease PJ', 'Ritchlin CT'], journal: 'JAMA', year: '2024',
+    authors: ['McInnes IB', 'Mease PJ', 'Ritchlin CT'], journal: 'JAMA', year: '2024', published_date: '2024-08-12',
     abstract: 'First head-to-head trial comparing secukinumab to adalimumab in psoriatic arthritis patients with confirmed axial disease demonstrated superior spinal outcomes with IL-17A inhibition.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
