@@ -79,7 +79,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39045678', doi: '10.1038/s41586-024-07234-5', title: 'Spatial transcriptomics of the rheumatoid synovium reveals distinct fibroblast niches',
-    authors: ['Croft AP', 'Naylor AJ', 'Buckley CD'], journal: 'Nature', year: '2024',
+    authors: ['Croft AP', 'Naylor AJ', 'Buckley CD'], journal: 'Nature', year: '2024', published_date: '2024-02-28',
     abstract: 'Using Visium spatial transcriptomics and multiplexed protein imaging of synovial biopsies from 38 RA patients, we mapped spatial organization of pathogenic fibroblast subsets.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
