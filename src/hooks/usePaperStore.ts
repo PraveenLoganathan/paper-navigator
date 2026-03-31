@@ -103,7 +103,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39089012', doi: '10.1016/S2665-9913(24)00102-7', title: 'Rituximab biosimilar CT-P10 in ANCA-associated vasculitis: COMBIVAS trial',
-    authors: ['Jones RB', 'Tervaert JW', 'Hauser T'], journal: 'Lancet Rheumatol', year: '2024',
+    authors: ['Jones RB', 'Tervaert JW', 'Hauser T'], journal: 'Lancet Rheumatol', year: '2024', published_date: '2024-07-20',
     abstract: 'CT-P10 demonstrated equivalent efficacy and comparable safety to reference rituximab in inducing remission in severe ANCA-associated vasculitis over 18 months.',
     open_access: false, availability: 'preprint', licence: 'Subscription', source: 'unpaywall',
   },
