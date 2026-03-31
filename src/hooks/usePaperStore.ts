@@ -127,7 +127,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39123456', doi: '10.1002/art.42950', title: 'Lupus nephritis flare prediction using urinary proteomic panels',
-    authors: ["Dall'Era M", 'Wofsy D', 'Mackay M'], journal: 'Arthritis Rheumatol', year: '2023',
+    authors: ["Dall'Era M", 'Wofsy D', 'Mackay M'], journal: 'Arthritis Rheumatol', year: '2023', published_date: '2023-12-01',
     abstract: 'A 7-protein urinary panel predicted lupus nephritis flares with 89% sensitivity up to 3 months before clinical relapse, enabling pre-emptive treatment escalation.',
     open_access: true, availability: 'available', licence: 'CC BY-NC 4.0', source: 'europe_pmc',
   },
