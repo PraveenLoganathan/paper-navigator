@@ -91,7 +91,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39067890', doi: '10.1186/s13073-024-01334-9', title: 'Multi-omic profiling identifies novel biomarkers for early RA diagnosis',
-    authors: ['Rao DA', 'Arazi A', 'Engel AJ'], journal: 'Sci Transl Med', year: '2024',
+    authors: ['Rao DA', 'Arazi A', 'Engel AJ'], journal: 'Sci Transl Med', year: '2024', published_date: '2024-04-17',
     abstract: 'Integrating transcriptomics, proteomics, and metabolomics from pre-clinical RA cohorts identified a 12-analyte signature predicting RA onset 3 years before symptom development.',
     open_access: true, availability: 'available', licence: 'CC BY-NC 4.0', source: 'europe_pmc',
   },
