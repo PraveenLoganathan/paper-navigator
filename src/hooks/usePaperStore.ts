@@ -151,7 +151,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39167890', doi: '10.1159/000538901', title: 'Wearable-detected flare signatures in axial spondyloarthritis',
-    authors: ['Siebert S', 'Engel B', 'McInnes IB'], journal: 'Digit Biomark', year: '2024',
+    authors: ['Siebert S', 'Engel B', 'McInnes IB'], journal: 'Digit Biomark', year: '2024', published_date: '2024-07-08',
     abstract: 'Continuous accelerometer and heart-rate data from smartwatches identified digital biomarkers that predicted axSpA flares 5 days before patient-reported symptom onset.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
