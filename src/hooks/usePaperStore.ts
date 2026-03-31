@@ -97,7 +97,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39078901', doi: '10.1136/ard-2023-225678', title: 'Filgotinib long-term safety: pooled analysis of FINCH programme',
-    authors: ['Genovese MC', 'Kalunian K', 'Engel B'], journal: 'Ann Rheum Dis', year: '2023',
+    authors: ['Genovese MC', 'Kalunian K', 'Engel B'], journal: 'Ann Rheum Dis', year: '2023', published_date: '2023-11-05',
     abstract: 'Pooled safety analysis from the FINCH 1-4 trials of filgotinib over 156 weeks in over 3,400 RA patients showed low incidence of major adverse cardiovascular events and venous thromboembolism.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
