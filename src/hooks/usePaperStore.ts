@@ -157,7 +157,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39178901', doi: '10.1186/s12969-024-00912-4', title: 'Ixekizumab in juvenile psoriatic arthritis: SPIRIT-JIA open-label extension',
-    authors: ['Brunner HI', 'Foeldvari I', 'Engel AG'], journal: 'Pediatr Rheumatol', year: '2024',
+    authors: ['Brunner HI', 'Foeldvari I', 'Engel AG'], journal: 'Pediatr Rheumatol', year: '2024', published_date: '2024-08-22',
     abstract: 'Ixekizumab demonstrated sustained JIA ACR70 response in 61% of juvenile PsA patients through 104 weeks with no new safety signals in the paediatric population.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
