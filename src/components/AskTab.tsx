@@ -47,9 +47,9 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)]">
+    <div className="flex flex-col min-h-0">
       {/* Chat area */}
-      <div className="flex-1 overflow-y-auto space-y-3 pb-4">
+      <div className="space-y-3 pb-4">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
             <BookOpen className="h-12 w-12 text-muted-foreground/40" />
