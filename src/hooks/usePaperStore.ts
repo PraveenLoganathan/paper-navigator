@@ -139,7 +139,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39145678', doi: '10.1148/radiol.2024231567', title: 'Deep learning radiographic scoring outperforms rheumatologists in RA progression',
-    authors: ['Langs G', 'Aletaha D', 'Glocker B'], journal: 'Radiology', year: '2024',
+    authors: ['Langs G', 'Aletaha D', 'Glocker B'], journal: 'Radiology', year: '2024', published_date: '2024-06-14',
     abstract: 'A convolutional neural network trained on 48,000 hand/foot radiographs achieved superior inter-reader agreement and detected erosive progression earlier than expert rheumatologists.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
