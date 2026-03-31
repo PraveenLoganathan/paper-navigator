@@ -145,7 +145,7 @@ const MOCK_SEARCH_RESULTS: SearchPaper[] = [
   },
   {
     pmid: '39156789', doi: '10.1681/ASN.2024010089', title: 'Telitacicept dual BLyS/APRIL blockade in refractory IgA nephropathy',
-    authors: ['Zhang H', 'Barratt J', 'Bhatt DL'], journal: 'J Am Soc Nephrol', year: '2024',
+    authors: ['Zhang H', 'Barratt J', 'Bhatt DL'], journal: 'J Am Soc Nephrol', year: '2024', published_date: '2024-05-30',
     abstract: 'Telitacicept achieved 52% reduction in proteinuria at 48 weeks in IgA nephropathy patients refractory to supportive care, with acceptable safety profile.',
     open_access: true, availability: 'available', licence: 'CC BY 4.0', source: 'europe_pmc',
   },
