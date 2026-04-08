@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
-import { ChatMessage } from '@/types/paper';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { ChatMessage, QuerySource } from '@/types/paper';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Send, Trash2, AlertTriangle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import PdfViewerPanel from '@/components/PdfViewerPanel';
 
 interface AskTabProps {
   messages: ChatMessage[];
@@ -33,6 +34,7 @@ function ThinkingDots() {
 
 export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
   const [input, setInput] = useState('');
+  const [viewerSource, setViewerSource] = useState<QuerySource | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const isThinking = messages.length > 0 && messages[messages.length - 1].role === 'user';
 
@@ -45,6 +47,20 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
     onSend(input.trim());
     setInput('');
   };
+
+  const handleCitationClick = useCallback((source: QuerySource) => {
+    setViewerSource(source);
+  }, []);
+
+  const closeViewer = useCallback(() => {
+    setViewerSource(null);
+  }, []);
+
+  // Build a lookup of all sources across all messages for inline citation matching
+  const allSources = messages.reduce<QuerySource[]>((acc, msg) => {
+    if (msg.sources) acc.push(...msg.sources);
+    return acc;
+  }, []);
 
   return (
     <div className="flex flex-col min-h-0">
@@ -96,7 +112,19 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
                 {msg.isError && <AlertTriangle className="h-4 w-4 text-destructive mb-1" />}
                 {msg.role === 'assistant' ? (
                   <div className="text-sm leading-relaxed prose prose-sm prose-stone dark:prose-invert max-w-none prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-headings:my-2 prose-strong:text-foreground">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    <ReactMarkdown
+                      components={{
+                        // Make inline citations like [1], [2] clickable
+                        p: ({ children, ...props }) => (
+                          <p {...props}>{renderCitationLinks(children, msg.sources || [], handleCitationClick)}</p>
+                        ),
+                        li: ({ children, ...props }) => (
+                          <li {...props}>{renderCitationLinks(children, msg.sources || [], handleCitationClick)}</li>
+                        ),
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
                   </div>
                 ) : (
                   <div className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</div>
@@ -108,9 +136,14 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
               {msg.sources && msg.sources.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {msg.sources.map((src, i) => (
-                    <span key={i} className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium" title={src.excerpt || src.caption || ''}>
+                    <button
+                      key={i}
+                      onClick={() => handleCitationClick(src)}
+                      className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium hover:bg-primary/20 transition-colors cursor-pointer"
+                      title={src.excerpt || src.caption || 'View source'}
+                    >
                       {src.citation} {src.document_title.length > 30 ? src.document_title.slice(0, 30) + '…' : src.document_title}
-                    </span>
+                    </button>
                   ))}
                 </div>
               )}
@@ -149,6 +182,71 @@ export default function AskTab({ messages, onSend, readyCount }: AskTabProps) {
           <Send className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* PDF Viewer Panel */}
+      <PdfViewerPanel source={viewerSource} onClose={closeViewer} />
     </div>
   );
+}
+
+/**
+ * Walks through React children and replaces text matching [N] with clickable citation buttons.
+ */
+function renderCitationLinks(
+  children: React.ReactNode,
+  sources: QuerySource[],
+  onClick: (source: QuerySource) => void,
+): React.ReactNode {
+  if (!children) return children;
+
+  const processNode = (node: React.ReactNode): React.ReactNode => {
+    if (typeof node === 'string') {
+      const regex = /\[(\d+)\]/g;
+      const parts: React.ReactNode[] = [];
+      let lastIndex = 0;
+      let match: RegExpExecArray | null;
+
+      while ((match = regex.exec(node)) !== null) {
+        if (match.index > lastIndex) {
+          parts.push(node.slice(lastIndex, match.index));
+        }
+        const num = parseInt(match[1], 10);
+        const source = sources.find(s => s.citation === `[${num}]`);
+        if (source) {
+          parts.push(
+            <button
+              key={`cite-${match.index}`}
+              onClick={(e) => {
+                e.preventDefault();
+                onClick(source);
+              }}
+              className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 mx-0.5 rounded bg-primary/15 text-primary text-[11px] font-semibold hover:bg-primary/25 transition-colors cursor-pointer align-baseline"
+              title={`${source.document_title} — Page ${source.page || '?'}`}
+            >
+              {match[0]}
+            </button>
+          );
+        } else {
+          parts.push(match[0]);
+        }
+        lastIndex = regex.lastIndex;
+      }
+
+      if (parts.length === 0) return node;
+      if (lastIndex < node.length) parts.push(node.slice(lastIndex));
+      return <>{parts}</>;
+    }
+
+    if (Array.isArray(node)) {
+      return node.map((child, i) => <span key={i}>{processNode(child)}</span>);
+    }
+
+    return node;
+  };
+
+  if (Array.isArray(children)) {
+    return children.map((child, i) => <span key={i}>{processNode(child)}</span>);
+  }
+
+  return processNode(children);
 }
